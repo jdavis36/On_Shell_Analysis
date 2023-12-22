@@ -15,7 +15,7 @@ cd CMSSW_13_3_1/src
 cmsenv 
 cd -
 
--- You are now ready to perform the OnShellAnalysis if you do not want to install MELA --
+--You are now ready to perform the OnShellAnalysis if you do not want to install MELA--
 Note: MELA installation update is needed for lxplus upgrade to el9
 
 If you want to learn how to configure and run an analysis (with examples)
