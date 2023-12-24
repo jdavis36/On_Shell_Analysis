@@ -270,7 +270,7 @@ class Analysis_Config:
       self.DoMassFilter = True
       self.TaggingProcess = "Tag_All_Untagged"
       self.ReweightProcess = "Calc_Event_Weight_2021_gammaH"
-      self.TreeFile = "Run2UL_22_apr23"
+      self.TreeFile = "200205_CutBased"
       self.Save_Failed = False
       self.Save_p = True
       self.Variable_Edges = False
@@ -282,7 +282,7 @@ class Analysis_Config:
       # Discriminants and couplings for OnShell Analysis #
       self.Coupling_Name = '8AC_Decay_Only'
       #self.Hypothesis_List = {"Hypothesis":['g1','g2','g4','g1prime2','ghzgs1prime2',"g2gg","g4gg","g2Zg","g4Zg"],"Options":"SM+AC_Only HZZ_Only"}
-      self.Hypothesis_List = {"Hypothesis":['g1','g2',"g2gg","g4gg","g2Zg","g4Zg"],"Options":"SM+AC_Only HZZ_Only"}
+      self.Hypothesis_List = {"Hypothesis":['g1','g4',"g2gg","g4gg","g2Zg","g4Zg"],"Options":"SM+AC_Only HZZ_Only"}
       self.Discriminants_To_Calculate = ["D_0minus_decay","D_CP_decay","D_0hplus_decay","D_int_decay","D_L1_decay","D_L1int_decay","D_L1Zg_decay","D_L1Zgint_decay","D_L1L1Zg_decay","D_L1L1Zgint_decay","D_0minus_Zg_decay","D_CP_Zg_decay","D_0hplus_Zg_decay","D_int_Zg_decay","D_0minus_gg_decay","D_CP_gg_decay","D_0hplus_gg_decay",
                                          "D_bkg",
                                          "Pt4l"]
