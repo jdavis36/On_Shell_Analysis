@@ -16,9 +16,9 @@ Systematics_Dictionary = Return_Systematics_Dictionary()
 Pythia_Tune_Dictionary = Return_Tune_Dictionary()
 Photon_SF_Scale_Dictionary = Return_Photon_SF_Scale_Dictionary()
 
-Add_Systematics = True
+Add_Systematics = False
 
-Apply_Photon_Scale_Factors = True
+Apply_Photon_Scale_Factors = False
 
 def Init_Yield_Change_Dict():
   Change_In_gammaH_Yield_With_SF_applied = {}
@@ -327,7 +327,7 @@ for filename in Sorted_List_Of_Input_Root_Trees:
 
       Return_Yield_Scale_Photon_Scale_Factors_Uncertainty(scale_syst,processes,Photon_SF_Scale_Dictionary,Yield_Change_Pull_Up,Yield_Change_Pull_Down,year,final_state,rate,Event_Tag)
     else:
-      addlumi(scale_syst,processes,Systematics_Dictionary,year,final_state,Event_Tag)
+      addlumi_Uncorrelated(scale_syst,processes,Systematics_Dictionary,year,final_state,Event_Tag)
       addhzzbr(scale_syst,processes,Systematics_Dictionary,year,final_state,Event_Tag)
 
     ibkg = 0 
