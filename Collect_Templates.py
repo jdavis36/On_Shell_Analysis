@@ -19,7 +19,7 @@ def main(argv):
     sys.exit(2)
   for opt, arg, in opts:
     if opt == '-h':
-      print('Collect_Templates.py -i <treelistpath> -o <output_directory> -config <config_file>')
+      print('Collect_Templates.py -i <treelistpath> -o <output_directory> --config <config_file>')
       sys.exit()
     elif opt in ("-i", "--ifile"):
         inputdir = arg
@@ -28,7 +28,7 @@ def main(argv):
     elif opt in ("-cf", "--config"):
         configname = arg
   if not all([inputdir, outputdir, configname]):
-        print('Collect_Templates.py -i <treelistpath> -o <output_directory> -config <config_file>')
+        print('Collect_Templates.py -i <treelistpath> -o <output_directory> --config <config_file>')
         sys.exit(2)
   if not outputdir.endswith("/"):
         outputdir = outputdir+"/"
