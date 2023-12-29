@@ -27,14 +27,15 @@ def main(argv):
     final_state = ''
     inputyear = ''
     outputdir = ''
+    configname = ''
     try:
-        opts, args = getopt.getopt(argv,"hi:p:c:f:y:o:",["ifile=","pfile=","cfile=","ffile=","yfile=","ofile="])
+        opts, args = getopt.getopt(argv,"hi:p:c:f:y:o:cf",["ifile=","pfile=","cfile=","ffile=","yfile=","ofile=","config="])
     except getopt.GetoptError:
-        print('CategorizedTemplateMaker.py -i <treelistpath> -p <production> -c <category> -f <final_state> -y <year> -o <output_directory>')
+        print('CategorizedTemplateMaker.py -i <treelistpath> -p <production> -c <category> -f <final_state> -y <year> -o <output_directory> -cf <config_file>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('CategorizedTemplateMaker.py -i <treelistpath> -p <production> -c <category> -f <final_state> -y <year> -o <output_directory>')
+            print('CategorizedTemplateMaker.py -i <treelistpath> -p <production> -c <category> -f <final_state> -y <year> -o <output_directory> -cf <config_file>')
             sys.exit()
         elif opt in ("-i", "--ifile"):
             treelistpath = arg
@@ -48,8 +49,10 @@ def main(argv):
             inputyear = arg
         elif opt in ("-o", "--ofile"):
             outputdir = arg
-    if not all([treelistpath, production, category, final_state, inputyear, outputdir]):
-        print('CategorizedTemplateMaker.py -i <treelistpath> -p <production> -c <category> -fs <final_state> -y <year> -o <output_dir>')
+        elif opt in ("-cf", "--config"):
+            configname = arg
+    if not all([treelistpath, production, category, final_state, inputyear, outputdir, configname]):
+        print('CategorizedTemplateMaker.py -i <treelistpath> -p <production> -c <category> -fs <final_state> -y <year> -o <output_dir> -cf <config_file>')
         sys.exit(2)
     if not outputdir.endswith("/"):
         outputdir = outputdir+"/"
@@ -82,7 +85,7 @@ def main(argv):
     #Analysis_Config = Config.Analysis_Config("gammaH_Cross_Section_Measurement")
     #Analysis_Config = Config.Analysis_Config("gammaH_Photons_Decay_Only_Kinematics_Photon_Rate")
     #Analysis_Config = Config.Analysis_Config("Tree_Level_qqH_Photons_XS")    
-    Analysis_Config = Config.Analysis_Config("Test_Optimal_Binning_All_Untagged")    
+    Analysis_Config = Config.Analysis_Config(configname)    
     
     lumi = Analysis_Config.lumi
 
