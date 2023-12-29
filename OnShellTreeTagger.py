@@ -42,14 +42,15 @@ def main(argv):
     branchfile = ''
     retag = False 
     isData = False 
+    configname = ''
     try:
-        opts, args = getopt.getopt(argv,"hi:o:b:d:r:",["ifile=","ofile=","bfile=","dfile=","rfile="])
+        opts, args = getopt.getopt(argv,"hi:o:b:d:r:cf",["ifile=","ofile=","bfile=","dfile=","rfile=","config="])
     except getopt.GetoptError:
-        print('batchTreeTagger.py -i <inputfile> -o <outputdir> -b <branchfile> -d <isData> -r <retag>')
+        print( ' batchTreeTagger.py -i <inputfile> -o <outputdir> -b <branchfile> -d <isData> -r <retag> --config <config name>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('batchTreeTagger.py -i <inputfile> -o <outputdir> -b <branchfile> -d <isData> -r <retag>')
+            print('batchTreeTagger.py -i <inputfile> -o <outputdir> -b <branchfile> -d <isData> -r <retag> --config <config name>')
             sys.exit()
         elif opt in ("-i", "--ifile"):
             inputfile = arg
@@ -61,9 +62,12 @@ def main(argv):
             isData = arg
         elif opt in ("-r", "--rfile"):
             retag = arg
-    print([inputfile, outputdir, branchfile, isData, retag])
-    if not all([inputfile, outputdir, branchfile, isData, retag]):
-        print('batchTreeTagger.py -i <inputfile> -o <outputdir> -b <branchfile> -d <isData> -r <retag>')
+        elif opt in ("-cf", "--config"):
+            configname = arg
+            print("ConfigNAME ",configname)
+    print([inputfile, outputdir, branchfile, isData, retag, configname])
+    if not all([inputfile, outputdir, branchfile, isData, retag, configname]):
+        print('batchTreeTagger.py -i <inputfile> -o <outputdir> -b <branchfile> -d <isData> -r <retag> --config <config name>')
         sys.exit(2)
 
     if not outputdir.endswith("/"):
@@ -87,12 +91,7 @@ def main(argv):
     #=============== Load the Analysis Config =================
     cConstants_list = cConstants.init_cConstants()
     gConstants_list = gConstants.init_gConstants()
-    #Analysis_Config = Config.Analysis_Config("OnShell_HVV_Photons_2021")
-    #Analysis_Config = Config.Analysis_Config("gammaH_Photons_Decay_Only")
-    #Analysis_Config = Config.Analysis_Config("gammaH_Photons_Decay_Only_Kinematics_Photon_Rate")
-    #Analysis_Config = Config.Analysis_Config("Tree_Level_qqH_Photons_XS")
-    #Analysis_Config = Config.Analysis_Config("Tree_Level_qqH_Photons_XS")
-    Analysis_Config = Config.Analysis_Config("Test_Optimal_Binning_All_Untagged")
+    Analysis_Config = Config.Analysis_Config(configname)
 
 
     #================ Set input file path and output file path ================
