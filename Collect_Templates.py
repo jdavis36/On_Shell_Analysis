@@ -18,7 +18,8 @@ Input_Dir=Input_Dir.strip("/")
 Output_Dir=Output_Dir.strip("/")
 # Recursively look for all names with a given event tag by looping over each tag 
 #Analysis_Config = Config.Analysis_Config("OnShell_HVV_Photons_2021")
-Analysis_Config = Config.Analysis_Config("gammaH_Photons_Decay_Only_Kinematics_Photon_Rate")
+#Analysis_Config = Config.Analysis_Config("gammaH_Photons_Decay_Only_Kinematics_Photon_Rate")
+Analysis_Config = Config.Analysis_Config("Test_Optimal_Binning_All_Untagged")
 Categories = Analysis_Config.Event_Categories
 Coupling_Name = Analysis_Config.Coupling_Name
 Final_States = Analysis_Config.Final_States
@@ -73,10 +74,13 @@ for Final_State in Final_States:
             #print(h_name,h_temp.Integral())
         hist_combine.append(h_temp)
       # Choose Naming Convntion for the combined templates
-
-      fout = ROOT.TFile(Output_Dir+"/templates_combined_"+cat+"_"+Coupling_Name+"_"+Final_State+"_"+TreeFile+"_"+Year+".root","recreate")
-      fout.cd()
-      print("Saving: ",Output_Dir+"/templates_combined_"+cat+"_"+Coupling_Name+"_"+Final_State+"_"+TreeFile+"_"+Year+".root")
-      for h in hist_combine:
-        h.Write()
-      fout.Close()
+        
+      # If the ouptut root file would be empty, do not save #
+      if len(hist_combine) == 0: continue
+      else:
+        fout = ROOT.TFile(Output_Dir+"/templates_combined_"+cat+"_"+Coupling_Name+"_"+Final_State+"_"+TreeFile+"_"+Year+".root","recreate")
+        fout.cd()
+        print("Saving: ",Output_Dir+"/templates_combined_"+cat+"_"+Coupling_Name+"_"+Final_State+"_"+TreeFile+"_"+Year+".root")
+        for h in hist_combine:
+          h.Write()
+        fout.Close()
