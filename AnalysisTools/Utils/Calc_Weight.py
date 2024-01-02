@@ -265,8 +265,8 @@ def Calc_Tree_Weight_2021_gammaH(t,name,DoMassFilter,TopTreeName): #Tree input a
                 if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
                   #ZX_Norm = 0
                   ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
-                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][0][2]) 
-                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][0][3])
+                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
                   ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
                 else:
                   ZX_Norm = 0
