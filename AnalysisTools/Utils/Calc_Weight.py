@@ -256,36 +256,37 @@ def Calc_Tree_Weight_2021_gammaH(t,name,DoMassFilter,TopTreeName): #Tree input a
           LepEta = tree2array(tree=t,branches=["LepEta"],top_branch_name = TopTreeName)
           Z1Flav = tree2array(tree=t,branches=["Z1Flav"],top_branch_name = TopTreeName)
           Z2Flav = tree2array(tree=t,branches=["Z2Flav"],top_branch_name = TopTreeName)
+          print(Z2Flav)
           ZZMass = tree2array(tree=t,branches=["ZZMass"],top_branch_name = TopTreeName).astype(float)
           ZX_Weight = []
           for i in range(nEntries):
             if DoMassFilter:
               if 105 < ZZMass[i] < 140:
-                if (Z1Flav[i][0] < 0 and Z2Flav[i][0] < 0) or (Z1Flav[i][0] > 0 and Z2Flav[i][0] > 0):
+                if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
                   #ZX_Norm = 0
-                  ZX_Norm = Normalize_ZX(year, True, Z1Flav[i][0], Z2Flav[i][0]) 
-                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][0][2], LepEta[i][0][2], LepLepId[i][0][2]) 
-                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][0][3], LepEta[i][0][3], LepLepId[i][0][3])
+                  ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
+                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][0][2]) 
+                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][0][3])
                   ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
                 else:
                   ZX_Norm = 0
                   #ZX_Norm = Normalize_ZX(year, False, Z1Flav[i][0], Z2Flav[i][0]) 
-                  ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][0][2], LepEta[i][0][2], LepLepId[i][0][2]) 
-                  ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][0][3], LepEta[i][0][3], LepLepId[i][0][3])
+                  ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                  ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
                   ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
               else: ZX_Weight.append(0)
             else:
-              if (Z1Flav[i][0] < 0 and Z2Flav[i][0] < 0) or (Z1Flav[i][0] > 0 and Z2Flav[i][0] > 0):
+              if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
                   #ZX_Norm = 0
-                  ZX_Norm = Normalize_ZX(year, True, Z1Flav[i][0], Z2Flav[i][0]) 
-                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][0][2], LepEta[i][0][2], LepLepId[i][0][2]) 
-                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][0][3], LepEta[i][0][3], LepLepId[i][0][3])
+                  ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
+                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
                   ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
               else:
                   ZX_Norm = 0
                   #ZX_Norm = Normalize_ZX(year, False, Z1Flav[i][0], Z2Flav[i][0]) 
-                  ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][0][2], LepEta[i][0][2], LepLepId[i][0][2]) 
-                  ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][0][3], LepEta[i][0][3], LepLepId[i][0][3])
+                  ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                  ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
                   ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
           return ZX_Weight
         elif "data" in name:
