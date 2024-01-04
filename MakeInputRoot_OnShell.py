@@ -2,6 +2,8 @@ import os, glob
 import sys
 import ROOT
 import copy
+from AnalysisTools.Utils import Config
+import getopt
 
 # What this script does is trim and rename the template files and prepare them for the datacards.
 # The expected input is a list of templates that would belong to the sample datacard.
@@ -100,6 +102,15 @@ def Make_Template_With_Fake_Data(OutName,names):
     
     Fake_Data_Hist.Write("data_obs")
 
+
+  Make_Fake_Bkg =True
+  if Make_Fake_Bkg:
+    xbins = hist.GetNbinsX()
+    Fake_Bkg_Hist = hists[0].Clone("bkg_ggzz")
+    for x in range (1,xbins):
+      hist.SetBinContent(x,0.01)
+    Fake_Bkg_Hist.Write("bkg_ggzz")
+  
   for hist in hists:
     # Unscale the gammaH_0PM histogram to keep the shape #
     if ("bkg_ew_negative" not in hist.GetName()):
@@ -115,21 +126,44 @@ def Make_Template_With_Fake_Data(OutName,names):
       
   print(OutName)
 
-def main():
-  output_dir = sys.argv[2]
-  if not os.path.exists(output_dir):
-      os.mkdir(output_dir)
-  output_dir = output_dir.strip("/")
-  Input_Dir = sys.argv[1]
-  for filename in glob.iglob(Input_Dir+'/**', recursive=True):
+def main(argv):
+  inputdir = ''
+  outputdir = ''
+  configname = ''
+  fake_bkg = ''
+  try:
+      opts, args = getopt.getopt(argv,"hi:o:cf",["ifile=","ofile=","config="])
+  except getopt.GetoptError:
+    print('MakeInputRoot_OnShell.py -i <treelistpath> -o <output_directory> --config <config_file>')
+    sys.exit(2)
+  for opt, arg, in opts:
+    if opt == '-h':
+      print('MakeInputRoot_OnShell.py -i <treelistpath> -o <output_directory> --config <config_file>')
+      sys.exit()
+    elif opt in ("-i", "--ifile"):
+        inputdir = arg
+    elif opt in ("-o", "--ofile"):
+        outputdir = arg
+    elif opt in ("-cf", "--config"):
+        configname = arg
+  if not all([inputdir, outputdir, configname]):
+        print('MakeInputRoot_OnShell.py -i <treelistpath> -o <output_directory> --config <config_file>')
+        sys.exit(2)
+  if not outputdir.endswith("/"):
+        outputdir = outputdir+"/"
+  
+  if not os.path.exists(outputdir):
+      os.mkdir(outputdir)
+  outputdir = outputdir.strip("/")
+  for filename in glob.iglob(inputdir+'/**', recursive=True):
     if os.path.isfile(filename) and (".root" in filename):
       out_ext=filename
       if "/" in filename:
         out_ext = filename.split("/")[-1]
         out_ext = out_ext.split(".")[0]+".input."+out_ext.split(".")[1]
       print("Parsing Root File: ",filename)
-      Make_Template_With_Fake_Data(output_dir+"/"+out_ext,[filename]) 
+      Make_Template_With_Fake_Data(outputdir+"/"+out_ext,[filename]) 
 
 if __name__ == "__main__":
-    main()
+   main(sys.argv[1:])
 
