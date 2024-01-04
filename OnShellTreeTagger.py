@@ -147,21 +147,27 @@ def main(argv):
               ftemptree = ROOT.TFile(tagtreefilename.replace(".root", "_subtree"+str(tind)+".root"), "CREATE")
 
               print("\n================ Reading events from '" + tree + "' and calculating new branches ================\n")
-              if not isData and "AllData" in tagtreefilename:
-                #print("here")
-                t = f["CRZLLTree"][tree]
+              if Analysis_Config.LHE_Study:
+                t=f["eventTree"]
               else:
-                t = f["ZZTree"][tree]
-              if retag:
-                t = f["eventTree"]
+                if not isData and "AllData" in tagtreefilename:
+                  #print("here")
+                  t = f["CRZLLTree"][tree]
+                else:
+                  t = f["ZZTree"][tree]
+                if retag:
+                  t = f["eventTree"]
 
-              if not isData and "AllData" in tagtreefilename:
-                print("here")
-                tc = fc.Get("CRZLLTree/"+tree)
+              if Analysis_Config.LHE_Study:
+                tc=fc.Get("eventTree")
               else:
-                tc = fc.Get("ZZTree/"+tree)
-              if retag:
-                tc = fc.Get("eventTree")
+                if not isData and "AllData" in tagtreefilename:
+                  print("here")
+                  tc = fc.Get("CRZLLTree/"+tree)
+                else:
+                  tc = fc.Get("ZZTree/"+tree)
+                if retag:
+                  tc = fc.Get("eventTree")
 
               treebranches = [ x for x in t.keys() ]
 
@@ -209,9 +215,13 @@ def main(argv):
                 Needed_Branches.append(name)
               for name in Needed_For_All():
                 Needed_Branches.append(name)
-              for name in Get_Scale_Values():
-                Needed_Branches.append(name)
-
+              if not Analysis_Config.LHE_Study:
+                for name in Get_Scale_Values():
+                  Needed_Branches.append(name)
+              
+              if Analysis_Config.LHE_Study:
+                for i in range(len(Needed_Branches)):
+                  Needed_Branches[i] = Needed_Branches[i].replace("GG","Gen_GG")
               print("Loading Value Dictionary")
               Needed_Branches = reduce(lambda re, x: re+[x] if x not in re else re, Needed_Branches, [])
               #value_dict = t.arrays(Needed_Branches,library="np")
@@ -220,12 +230,27 @@ def main(argv):
               for value_dict in t.iterate(Needed_Branches,step_size=10000,library="np"):
                 print("Processing",Total_Run_Over,"/",Total_Events," Precentage complete:",float(Total_Run_Over)/float(Total_Events) * 100)
                 Total_Run_Over += 10000
+
+                print("Checking for improper naming scheme:")
+                bad_names = []
+                replacement_names = []
+                for name in value_dict.keys():
+                  if "Gen_GG" in name:
+                    new_name = name.replace("Gen_GG","GG")
+                    bad_names.append(name)
+                    replacement_names.append(new_name)    
+
+                for bad_name,replacement_name in zip(bad_names,replacement_names):
+                  value_dict[replacement_name] = value_dict.pop(bad_name)
+
                 for ent in range(len(value_dict[list(value_dict.keys())[0]])):
                   #================ Loop over events ================#
                   
                   #================ Fill failed events with dummy and skip to loop over branches ================
                   if retag:
                     branchdict["Bin40"].append(t.Bin40)
+                  elif Analysis_Config.LHE_Study:
+                    branchdict["Bin40"].append(0)
                   else:
                     branchdict["Bin40"].append(f["ZZTree/Counters"].values(False)[40])
                   if tree == "candTree_failed":
@@ -312,7 +337,13 @@ def main(argv):
                     if "Pt4l" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["Pt4l"].append(value_dict["ZZPt"][ent])
                     #===== Calculating Useful Info for OnShell Discriminants ======
-                    notdijet = OnShell_Help.notdijet(value_dict["p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal"][ent])
+                    DoDiJet = False
+                    notdijet = None
+                    for name in Analysis_Config.Discriminants_To_Calculate:
+                      if "VBF" in name or "VH" in name:
+                        DoDiJet = True
+                    if DoDiJet:
+                      notdijet = OnShell_Help.notdijet(value_dict["p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal"][ent])
                     #================ Calculating AC discriminants ================
                     if "D_0minus_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0minus_decay"].append(Discriminants.D_0minus_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
@@ -393,8 +424,11 @@ def main(argv):
                     if "D_0hplus_gg_VBFdecay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0hplus_gg_VBFdecay"].append(Discriminants.D_0hplus_gg_VBFdecay(value_dict["p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_JJVBF_SIG_gha2_1_JHUGen_JECNominal"][ent],value_dict["p_GG_SIG_ghg2_1_gha2_1_JHUGen,notdijet"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     #=========== Calculating VH Hadronic Discriminants ============
-                    WH_scale = OnShell_Help.HadWH_Scale_Nominal(value_dict["p_HadWH_mavjj_JECNominal"][ent],value_dict["p_HadWH_mavjj_true_JECNominal"][ent],value_dict["pConst_HadWH_SIG_ghw1_1_JHUGen_JECNominal"])
-                    ZH_scale = OnShell_Help.HadZH_Scale_Nominal(value_dict["p_HadZH_mavjj_JECNominal"][ent],value_dict["p_HadZH_mavjj_true_JECNominal"][ent],value_dict["pConst_HadZH_SIG_ghz1_1_JHUGen_JECNominal"])
+                    WH_scale = 0
+                    ZH_scale = 0
+                    if not Analysis_Config.LHE_Study:
+                      WH_scale = OnShell_Help.HadWH_Scale_Nominal(value_dict["p_HadWH_mavjj_JECNominal"][ent],value_dict["p_HadWH_mavjj_true_JECNominal"][ent],value_dict["pConst_HadWH_SIG_ghw1_1_JHUGen_JECNominal"])
+                      ZH_scale = OnShell_Help.HadZH_Scale_Nominal(value_dict["p_HadZH_mavjj_JECNominal"][ent],value_dict["p_HadZH_mavjj_true_JECNominal"][ent],value_dict["pConst_HadZH_SIG_ghz1_1_JHUGen_JECNominal"])
                     if "D_0minus_HadVH" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0minus_HadVH"].append(Discriminants.D_0minus_HadVH(value_dict["p_HadWH_SIG_ghw1_1_JHUGen_JECNominal"][ent],value_dict["p_HadZH_SIG_ghz1_1_JHUGen_JECNominal"][ent],value_dict["p_HadWH_SIG_ghw4_1_JHUGen_JECNominal"][ent],value_dict["p_HadZH_SIG_ghz4_1_JHUGen_JECNominal"][ent],WH_scale,ZH_scale,notdijet,value_dict["ZZMass"][ent],gConstants_list))
                     if "D_CP_HadVH" in Analysis_Config.Discriminants_To_Calculate:
@@ -558,14 +592,24 @@ def main(argv):
           chain.Merge(tagtreefilename)
           
           print("Merged eventTree written to '{}'\n".format(tagtreefilename))
+          #if Analysis_Config.LHE_Study:
+          #  f = ROOT.TFile(tagtreefilename,"Recreate")
+          #  f.Print()
+          #  AddAliasTree= f.Get("eventTree")
+          #  AddAliasTree.SetAlias("ZZMass","M4L")
+          #  AddAliasTree.Close
 
           for i in range(len(treenames)):
               if os.path.exists(tagtreefilename.replace(".root", "_subtree"+str(i)+".root")):
                   os.remove(tagtreefilename.replace(".root", "_subtree"+str(i)+".root"))
 
-          f = ROOT.TFile(tagtreefilename, 'READ')
+          f = ROOT.TFile(tagtreefilename, 'Update')
           t = f.Get("eventTree")
-          #t.Print()
+          if Analysis_Config.LHE_Study:
+            t.SetAlias("ZZMass","M4L")
+            t.SetAlias("Z1Flav","flavdau1*flavdau2")
+            t.SetAlias("Z2Flav","flavdau3*flavdau4")
+            t.Write()
           f.Close()
           print("")
 
