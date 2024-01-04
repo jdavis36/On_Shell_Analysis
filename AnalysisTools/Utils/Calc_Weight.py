@@ -195,134 +195,140 @@ def Calc_Event_Weight_200205(t,name): #Tree input as t and the name of the tree 
         #return tree2array(tree=t,branches=["overallEventWeight/Bin40"]).astype(float) * new_xsec * scale  * pb_to_fb
 """
 
-def Calc_Tree_Weight_2021_gammaH(t,name,DoMassFilter,TopTreeName): #Tree input as t and the name of the tree should have all info included#
-        isBkg = False
-        doleptonSF=True
-        pb_to_fb =1000
-        uproot_tree = uproot.open(t)
-        nEntries=uproot_tree[TopTreeName].num_entries
-        # Need to sort the original file path to grab correct XS #
-        Original_Name = t.split("/")[-2]
-        print("Name: ",name,"TopTreeName: ",TopTreeName)
-        #==============Calculate the event scale per event array===============================#
-        scale = np.ones(nEntries)
-        year = 0
-        if "2016" in name:
-          year = 2016
-        elif "2017" in name:
-          year = 2017 
-        elif "2018" in name:
-          year = 2018
-        if doleptonSF and not "ZX" in name:
-          LepLepId = tree2array(tree=t,branches=["LepLepId"],top_branch_name = TopTreeName)
-          LepPt = tree2array(tree=t,branches=["LepPt"],top_branch_name = TopTreeName)
-          LepEta = tree2array(tree=t,branches=["LepEta"],top_branch_name = TopTreeName)
-          dataMCWeight = tree2array(tree=t,branches=["dataMCWeight"],top_branch_name = TopTreeName)
-          LepScale = []
-          # Load up the LeptonScale Factors#
-          LepSF = init_LEPSF()
-          for i in range(nEntries):
-              LepScale.append(fixleptonscalefactor(int(year),LepLepId[i],LepPt[i],LepEta[i],dataMCWeight[i],LepSF))
-          scale = scale * LepScale
-        if any( x in ["ggH","VBF","ZH","WH","ttH","bbH","tqH","WplusH","WminusH","VH"] for x in Original_Name):
-          scale = scale * 1.
-        if any( x in ["VBFbkg","TTZZ","ZZZ","WZZ","WWZ","TTWW","TTZJets_M10_MLM","TTZToLLNuNu_M10","TTZToLL_M1to10_MLM"] for x in Original_Name):
-          isBkg = True
-          scale = scale * 1.
-        if "ggH" in name:
-          ggH_NNLOPS_weight = tree2array(tree=t,branches=["ggH_NNLOPS_weight"],top_branch_name = TopTreeName).astype(float)
-          scale = scale * ggH_NNLOPS_weight
-        elif "ggZZ" in name: #or self.isggZZoffshell:
-          isBkg = True 
-          KFactor_QCD_ggZZ_Nominal = tree2array(tree=t,branches=["KFactor_QCD_ggZZ_Nominal"],top_branch_name = TopTreeName).astype(float)
-          scale = scale * KFactor_QCD_ggZZ_Nominal
-        elif "qqZZ" in name:
+def Calc_Tree_Weight_2021_gammaH(t,name,DoMassFilter,TopTreeName, DoLHEStudy=False): #Tree input as t and the name of the tree should have all info included#
+        if DoLHEStudy:
+          uproot_tree = uproot.open(t)
+          nEntries=uproot_tree[TopTreeName].num_entries
+          xsec = Fix_LHE_XSec(t.split("/")[-2])
+          return np.ones(nEntries) * float(xsec)/float(nEntries)
+        else:
+          isBkg = False
+          doleptonSF=True
+          pb_to_fb =1000
+          uproot_tree = uproot.open(t)
+          nEntries=uproot_tree[TopTreeName].num_entries
+          # Need to sort the original file path to grab correct XS #
+          Original_Name = t.split("/")[-2]
+          print("Name: ",name,"TopTreeName: ",TopTreeName)
+          #==============Calculate the event scale per event array===============================#
+          scale = np.ones(nEntries)
+          year = 0
+          if "2016" in name:
+            year = 2016
+          elif "2017" in name:
+            year = 2017 
+          elif "2018" in name:
+            year = 2018
+          if doleptonSF and not "ZX" in name:
+            LepLepId = tree2array(tree=t,branches=["LepLepId"],top_branch_name = TopTreeName)
+            LepPt = tree2array(tree=t,branches=["LepPt"],top_branch_name = TopTreeName)
+            LepEta = tree2array(tree=t,branches=["LepEta"],top_branch_name = TopTreeName)
+            dataMCWeight = tree2array(tree=t,branches=["dataMCWeight"],top_branch_name = TopTreeName)
+            LepScale = []
+            # Load up the LeptonScale Factors#
+            LepSF = init_LEPSF()
+            for i in range(nEntries):
+                LepScale.append(fixleptonscalefactor(int(year),LepLepId[i],LepPt[i],LepEta[i],dataMCWeight[i],LepSF))
+            scale = scale * LepScale
+          if any( x in ["ggH","VBF","ZH","WH","ttH","bbH","tqH","WplusH","WminusH","VH"] for x in Original_Name):
+            scale = scale * 1.
+          if any( x in ["VBFbkg","TTZZ","ZZZ","WZZ","WWZ","TTWW","TTZJets_M10_MLM","TTZToLLNuNu_M10","TTZToLL_M1to10_MLM"] for x in Original_Name):
             isBkg = True
-            if "GEN" in name: #Must check this later # 
-              scale = scale * 1
-            else:
-              print(name)
-              KFactor_EW_qqZZ = tree2array(tree=t,branches=["KFactor_EW_qqZZ"],top_branch_name = TopTreeName).astype(float)
-              KFactor_QCD_qqZZ_M = tree2array(tree=t,branches=["KFactor_QCD_qqZZ_M"],top_branch_name = TopTreeName).astype(float)
-              scale = scale * KFactor_EW_qqZZ * KFactor_QCD_qqZZ_M
-        elif "ZX" in name or "zjets" in name:
-          isBkg = True
-          # Load up the ZX dictionaries #
-          SSFR = init_FakeRates_SS()
-          OSFR = init_FakeRates_OS()
-          #=============================#
-          LepLepId = tree2array(tree=t,branches=["LepLepId"],top_branch_name = TopTreeName)
-          LepPt = tree2array(tree=t,branches=["LepPt"],top_branch_name = TopTreeName)
-          LepEta = tree2array(tree=t,branches=["LepEta"],top_branch_name = TopTreeName)
-          Z1Flav = tree2array(tree=t,branches=["Z1Flav"],top_branch_name = TopTreeName)
-          Z2Flav = tree2array(tree=t,branches=["Z2Flav"],top_branch_name = TopTreeName)
-          print(Z2Flav)
-          ZZMass = tree2array(tree=t,branches=["ZZMass"],top_branch_name = TopTreeName).astype(float)
-          ZX_Weight = []
-          for i in range(nEntries):
-            if DoMassFilter:
-              if 105 < ZZMass[i] < 140:
-                if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
-                  #ZX_Norm = 0
-                  ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
-                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
-                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
-                  ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
-                else:
-                  ZX_Norm = 0
-                  #ZX_Norm = Normalize_ZX(year, False, Z1Flav[i][0], Z2Flav[i][0]) 
-                  ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
-                  ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
-                  ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
-              else: ZX_Weight.append(0)
-            else:
-              if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
-                  #ZX_Norm = 0
-                  ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
-                  ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
-                  ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
-                  ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
+            scale = scale * 1.
+          if "ggH" in name:
+            ggH_NNLOPS_weight = tree2array(tree=t,branches=["ggH_NNLOPS_weight"],top_branch_name = TopTreeName).astype(float)
+            scale = scale * ggH_NNLOPS_weight
+          elif "ggZZ" in name: #or self.isggZZoffshell:
+            isBkg = True 
+            KFactor_QCD_ggZZ_Nominal = tree2array(tree=t,branches=["KFactor_QCD_ggZZ_Nominal"],top_branch_name = TopTreeName).astype(float)
+            scale = scale * KFactor_QCD_ggZZ_Nominal
+          elif "qqZZ" in name:
+              isBkg = True
+              if "GEN" in name: #Must check this later # 
+                scale = scale * 1
               else:
-                  ZX_Norm = 0
-                  #ZX_Norm = Normalize_ZX(year, False, Z1Flav[i][0], Z2Flav[i][0]) 
-                  ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
-                  ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
-                  ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
-          return ZX_Weight
-        elif "data" in name:
-          data_weights = np.ones(nEntries) 
+                print(name)
+                KFactor_EW_qqZZ = tree2array(tree=t,branches=["KFactor_EW_qqZZ"],top_branch_name = TopTreeName).astype(float)
+                KFactor_QCD_qqZZ_M = tree2array(tree=t,branches=["KFactor_QCD_qqZZ_M"],top_branch_name = TopTreeName).astype(float)
+                scale = scale * KFactor_EW_qqZZ * KFactor_QCD_qqZZ_M
+          elif "ZX" in name or "zjets" in name:
+            isBkg = True
+            # Load up the ZX dictionaries #
+            SSFR = init_FakeRates_SS()
+            OSFR = init_FakeRates_OS()
+            #=============================#
+            LepLepId = tree2array(tree=t,branches=["LepLepId"],top_branch_name = TopTreeName)
+            LepPt = tree2array(tree=t,branches=["LepPt"],top_branch_name = TopTreeName)
+            LepEta = tree2array(tree=t,branches=["LepEta"],top_branch_name = TopTreeName)
+            Z1Flav = tree2array(tree=t,branches=["Z1Flav"],top_branch_name = TopTreeName)
+            Z2Flav = tree2array(tree=t,branches=["Z2Flav"],top_branch_name = TopTreeName)
+            print(Z2Flav)
+            ZZMass = tree2array(tree=t,branches=["ZZMass"],top_branch_name = TopTreeName).astype(float)
+            ZX_Weight = []
+            for i in range(nEntries):
+              if DoMassFilter:
+                if 105 < ZZMass[i] < 140:
+                  if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
+                    #ZX_Norm = 0
+                    ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
+                    ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                    ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
+                    ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
+                  else:
+                    ZX_Norm = 0
+                    #ZX_Norm = Normalize_ZX(year, False, Z1Flav[i][0], Z2Flav[i][0]) 
+                    ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                    ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
+                    ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
+                else: ZX_Weight.append(0)
+              else:
+                if (Z1Flav[i] < 0 and Z2Flav[i] < 0) or (Z1Flav[i] > 0 and Z2Flav[i] > 0):
+                    #ZX_Norm = 0
+                    ZX_Norm = Normalize_ZX(year, True, Z1Flav[i], Z2Flav[i]) 
+                    ZX_Lep3FR = getFakeRate(SSFR, year, True, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                    ZX_Lep4FR = getFakeRate(SSFR, year, True, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
+                    ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
+                else:
+                    ZX_Norm = 0
+                    #ZX_Norm = Normalize_ZX(year, False, Z1Flav[i][0], Z2Flav[i][0]) 
+                    ZX_Lep3FR = getFakeRate(OSFR, year, False, LepPt[i][2], LepEta[i][2], LepLepId[i][2]) 
+                    ZX_Lep4FR = getFakeRate(OSFR, year, False, LepPt[i][3], LepEta[i][3], LepLepId[i][3])
+                    ZX_Weight.append(ZX_Norm * ZX_Lep3FR * ZX_Lep4FR)
+            return ZX_Weight
+          elif "data" in name:
+            data_weights = np.ones(nEntries) 
+            if DoMassFilter:
+              m4l = tree2array(tree=t,branches=["ZZMass"],top_branch_name = TopTreeName).astype(float)
+              for i in range(len(m4l)):
+                if not (105<=m4l[i]<=140):
+                  data_weights[i] = 0
+            print("Sum:",sum(data_weights))
+            return data_weights
+          # Filter out by mass THIS is not done for data like in ZX and DATA#
           if DoMassFilter:
             m4l = tree2array(tree=t,branches=["ZZMass"],top_branch_name = TopTreeName).astype(float)
             for i in range(len(m4l)):
               if not (105<=m4l[i]<=140):
-                data_weights[i] = 0
-          print("Sum:",sum(data_weights))
-          return data_weights
-        # Filter out by mass THIS is not done for data like in ZX and DATA#
-        if DoMassFilter:
-          m4l = tree2array(tree=t,branches=["ZZMass"],top_branch_name = TopTreeName).astype(float)
-          for i in range(len(m4l)):
-            if not (105<=m4l[i]<=140):
-              scale[i] = 0
-        #===================================Make an array of each event weight===========================================#
+                scale[i] = 0
+          #===================================Make an array of each event weight===========================================#
 
-        # Need to add Z + X stuff here at some point #
+          # Need to add Z + X stuff here at some point #
 
-        # Grab the cross section form the tree #
-        new_xsec = update_xsec(Original_Name,tree2array(tree=t,branches=["xsec"],top_branch_name = TopTreeName).astype(float)[0])
-        if not isBkg and ("gammaH" not in name): # Note that gammaH has no SM rate so we do not normalize to SM Xsec
-          print("Here")
-          new_xsec *= Get_SM_Xsec_Scale(name,year)*tree2array(tree=t,branches=["genxsec*genBR/xsec"],top_branch_name = TopTreeName).astype(float)[0]
-        
-        #print ((tree2array(tree=t,branches=["Bin40"]).astype(float)[0]),np.sum(tree2array(tree=t,branches=["xsec"]).astype(float)[0]))
+          # Grab the cross section form the tree #
+          new_xsec = update_xsec(Original_Name,tree2array(tree=t,branches=["xsec"],top_branch_name = TopTreeName).astype(float)[0])
+          if not isBkg and ("gammaH" not in name): # Note that gammaH has no SM rate so we do not normalize to SM Xsec
+            print("Here")
+            new_xsec *= Get_SM_Xsec_Scale(name,year)*tree2array(tree=t,branches=["genxsec*genBR/xsec"],top_branch_name = TopTreeName).astype(float)[0]
+          
+          #print ((tree2array(tree=t,branches=["Bin40"]).astype(float)[0]),np.sum(tree2array(tree=t,branches=["xsec"]).astype(float)[0]))
 
-        # Check to update the cross_sections to match YR_4 report#
+          # Check to update the cross_sections to match YR_4 report#
 
-        #return tree2array(tree=t,branches=["overallEventWeight*genBR*(genxsec/xsec)*L1prefiringWeight/Bin40"]).astype(float) * scale * new_xsec * pb_to_fb
-        #return tree2array(tree=t,branches=["xsec*overallEventWeight*L1prefiringWeight/Bin40"]).astype(float) * scale  * pb_to_fb
-        #print tree2array(tree=t,branches=["Bin40"])[0][0],name
-        return tree2array(tree=t,branches=["overallEventWeight*L1prefiringWeight/Bin40"],top_branch_name = TopTreeName).astype(float) * new_xsec * scale  * pb_to_fb
-        #return tree2array(tree=t,branches=["overallEventWeight/Bin40"]).astype(float) * new_xsec * scale  * pb_to_fb
+          #return tree2array(tree=t,branches=["overallEventWeight*genBR*(genxsec/xsec)*L1prefiringWeight/Bin40"]).astype(float) * scale * new_xsec * pb_to_fb
+          #return tree2array(tree=t,branches=["xsec*overallEventWeight*L1prefiringWeight/Bin40"]).astype(float) * scale  * pb_to_fb
+          #print tree2array(tree=t,branches=["Bin40"])[0][0],name
+          return tree2array(tree=t,branches=["overallEventWeight*L1prefiringWeight/Bin40"],top_branch_name = TopTreeName).astype(float) * new_xsec * scale  * pb_to_fb
+          #return tree2array(tree=t,branches=["overallEventWeight/Bin40"]).astype(float) * new_xsec * scale  * pb_to_fb
 
 def Calc_Event_Weight_2021_gammaH(event,name): #Tree input as t and the name of the tree should have all info included#
         doleptonSF=True
