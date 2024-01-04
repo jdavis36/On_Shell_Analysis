@@ -62,7 +62,7 @@ def plotlimits(*scans, **kwargs):
     killpoints = []
     higgsbasis = None
     squareaxis = None
-    for kw, kwarg in kwargs.iteritems():
+    for kw, kwarg in iter(kwargs.items()):
         if kw == "legendposition":
             legendposition = kwarg
         elif kw == "CLtextposition":
@@ -147,7 +147,7 @@ def plotlimits(*scans, **kwargs):
                 if 2*deltaNLL > 100 : 
                     continue
                 if any(_[0] < fa3 < _[1] for _ in killpoints): continue
-		NLL[fa3] = 2*deltaNLL
+                NLL[fa3] = 2*deltaNLL
             if 1 not in NLL and -1 in NLL:
                 NLL[1] = NLL[-1]
 
@@ -316,8 +316,8 @@ if __name__ == "__main__":
             pass
         else:
             f.write("\n\n\n\n\n\ngit info:\n\n")
-            f.write(subprocess.check_output(["git", "rev-parse", "HEAD"]))
+            f.write(subprocess.check_output(["git", "rev-parse", "HEAD"],text=True))
             f.write("\n")
-            f.write(subprocess.check_output(["git", "status"]))
+            f.write(subprocess.check_output(["git", "status"],text=True))
             f.write("\n")
-            f.write(subprocess.check_output(["git", "diff"]))
+            f.write(subprocess.check_output(["git", "diff"],text=True))

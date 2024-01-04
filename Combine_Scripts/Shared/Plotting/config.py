@@ -60,7 +60,7 @@ def getconfiguration(hostname, username):
     )
 
 configuration = getconfiguration(socket.gethostname(), getpass.getuser())
-for key, value in configuration.iteritems():
+for key, value in iter(configuration.items()):
   assert key not in globals()
   globals()[key] = value
 

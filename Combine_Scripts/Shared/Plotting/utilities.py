@@ -1,7 +1,7 @@
 import abc
 import collections
 import contextlib
-import cPickle
+import _pickle as cPickle
 import datetime
 import errno
 import getpass
@@ -23,7 +23,7 @@ import tempfile
 import time
 
 from functools import wraps
-from itertools import tee, izip
+from itertools import tee
 
 import ROOT
 
@@ -94,12 +94,12 @@ def cache(function):
     @wraps(function)
     def newfunction(*args, **kwargs):
         try:
-            return cache[args, tuple(sorted(kwargs.iteritems()))]
+            return cache[args, tuple(sorted(iter(kwargs.items())))]
         except TypeError:
-            print args, tuple(sorted(kwargs.iteritems()))
+            print(args, tuple(sorted(iter(kwargs.items()))))
             raise
         except KeyError:
-            cache[args, tuple(sorted(kwargs.iteritems()))] = function(*args, **kwargs)
+            cache[args, tuple(sorted(iter(kwargs.items())))] = function(*args, **kwargs)
             return newfunction(*args, **kwargs)
     return newfunction
 
@@ -116,7 +116,7 @@ def cache_keys(*argkeys, **kwargkeys):
             except TypeError:
                 pprint.pprint(keyforcache)
                 for _ in keyforcache:
-                  for _2 in _: print _2, hash(_2)
+                  for _2 in _: print(_2, hash(_2))
                 raise
             except KeyError:
                 cache[keyforcache] = result = function(*args, **kwargs)
@@ -159,7 +159,7 @@ def cache_file(filename, *argkeys, **kwargkeys):
             try:
                 return cache[keyforcache]
             except TypeError:
-                print keyforcache
+                print(keyforcache)
                 raise
             except KeyError:
                 result = function(*args, **kwargs)
@@ -385,14 +385,14 @@ class OneAtATime(KeepWhileOpenFile):
             result = super(OneAtATime, self).__enter__()
             if result:
                 return result
-            print self.__printmessage
+            print(self.__printmessage)
             time.sleep(self.delay)
 
 def jsonloads(jsonstring):
     try:
         return json.loads(jsonstring)
     except:
-        print jsonstring
+        print(jsonstring)
         raise
 
 def pairwise(iterable):
@@ -402,7 +402,7 @@ def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
     a, b = tee(iterable)
     next(b, None)
-    return izip(a, b)
+    return zip(a, b)
 
 def callclassinitfunctions(*names):
     def callfunctions(cls):
@@ -419,7 +419,7 @@ def LoadMacro(filename):
     while not done:
         with KeepWhileOpenFile(filename.rstrip("+")+".tmp") as kwof:
             if not kwof:
-                print "Another process is already loading {}, waiting 5 seconds...".format(filename)
+                print("Another process is already loading {}, waiting 5 seconds...".format(filename))
                 time.sleep(5)
                 continue
             error = ROOT.gROOT.LoadMacro(filename)
@@ -497,7 +497,7 @@ class JsonDict(object):
         try:
             return self.getnesteddictvalue(self.getdict(), *self.keys, default=self.default)
         except:
-            print "Error while getting value of\n{!r}".format(self)
+            print("Error while getting value of\n{!r}".format(self))
             raise
 
     def delvalue(self):
@@ -608,7 +608,7 @@ def jobexists(jobid):
         except subprocess.CalledProcessError as e:
             if "slurm_load_jobs error: Invalid job id specified" in e.output:
                 return False
-            print e.output
+            print(e.output)
             raise
     assert False, config.host
 
@@ -748,13 +748,13 @@ def cleanupscratchdir():
       with open(os.path.join(folder, "JOBID")) as f:
         jobid = f.read().strip()
         if not jobexists(jobid):
-          print "job {} was using {}, but died --> deleting the folder".format(jobid, folder)
+          print("job {} was using {}, but died --> deleting the folder".format(jobid, folder))
           try:
             shutil.rmtree(folder)
           except:
-            print "failed to remove it, see if it's still there"
+            print("failed to remove it, see if it's still there")
     except IOError:
-      print "please check on {}, it has no JOBID file".format(folder)
+      print("please check on {}, it has no JOBID file".format(folder))
 
 def getmembernames(*args, **kwargs):
     return [_[0] for _ in inspect.getmembers(*args, **kwargs)]
@@ -952,11 +952,11 @@ class PlotCopier(object):
         ] + ["--exclude=*", "--delete"]
 
         if LSB_JOBID():
-            print
-            print "To copy plots, try:"
-            print
-            print " ".join(pipes.quote(_) for _ in command)
-            print
+            print()
+            print("To copy plots, try:")
+            print()
+            print(" ".join(pipes.quote(_) for _ in command))
+            print()
             return
 
         #getpass instead of raw_input in case you accidentally type your password here
@@ -967,11 +967,11 @@ class PlotCopier(object):
             if answer != "no":
                 subprocess.check_call(command)
         except:
-            print
-            print "Failed to copy plots.  To do it yourself, try:"
-            print
-            print " ".join(pipes.quote(_) for _ in command)
-            print
+            print()
+            print("Failed to copy plots.  To do it yourself, try:")
+            print()
+            print(" ".join(pipes.quote(_) for _ in command))
+            print()
             if all(_ is None for _ in error): raise
 
     def TCanvas(self, *args, **kwargs):
@@ -1039,15 +1039,15 @@ def debugfunction(function):
   @wraps(function)
   def newfunction(*args, **kwargs):
     result = function(*args, **kwargs)
-    print "{.__name__}({}{}{})={}".format(function, ", ".join(str(_) for _ in args), ", " if args and kwargs else "", ", ".join("{}={}".format(k, v) for k, v in kwargs.iteritems()), result)
+    print("{.__name__}({}{}{})={}".format(function, ", ".join(str(_) for _ in args), ", " if args and kwargs else "", ", ".join("{}={}".format(k, v) for k, v in kwargs.iteritems()), result))
     return result
   return newfunction
 
 def reiglob(path, exp, invert=False, verbose=False, hastomatch=False, okifnofolder=False):
   "https://stackoverflow.com/a/17197678/5228524"
-  print path, exp
+  print(path, exp)
 
-  if verbose: print "reiglobbing "+os.path.join(path, exp)
+  if verbose: print("reiglobbing "+os.path.join(path, exp))
 
   m = re.compile(exp)
 
@@ -1057,7 +1057,7 @@ def reiglob(path, exp, invert=False, verbose=False, hastomatch=False, okifnofold
     for f in os.listdir(path):
       if bool(m.match(f)) != bool(invert):
         n += 1
-        if verbose and n % 100 == 0: print "Found {} files so far".format(n)
+        if verbose and n % 100 == 0: print("Found {} files so far".format(n))
         yield os.path.join(path, f)
   except OSError:
     if not okifnofolder: raise
