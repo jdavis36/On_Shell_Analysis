@@ -55,7 +55,12 @@ def Return_Needed_From_Discriminants_To_Calculate(Analysis_Config):
     if "Pt4l" in Analysis_Config.Discriminants_To_Calculate:
         Names.extend(["ZZPt"])
     #===== Calculating Useful Info for OnShell Discriminants ======
-    Names.extend(["p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal"])
+    DoDiJet = False
+    for name in Analysis_Config.Discriminants_To_Calculate:
+        if "VBF" in name or "VH" in name:
+            DoDiJet = True
+    if DoDiJet:
+        Names.extend(["p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal"])
     #================ Calculating AC discriminants ================
     if "D_0minus_decay" in Analysis_Config.Discriminants_To_Calculate:
         Names.extend(["p_GG_SIG_ghg2_1_ghz1_1_JHUGen","p_GG_SIG_ghg2_1_ghz4_1_JHUGen"])

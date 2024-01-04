@@ -950,11 +950,9 @@ def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Anal
   print ("OutHypothesis:",OutputHypothesis)
   # ================== #
   doMELA_Reweight = None
-  #if OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis and "gammaH" in ProductionMode):
-  if OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis) or OutputHypothesis == "data_obs" :
-  #if OutputHypothesis == "bkg":
-    #Check_Input(ProductionMode,None,None)
-    doMELA_Reweight = False
+  #if OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis) or OutputHypothesis == "data_obs" :
+  if OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis and "gammaH" in ProductionMode):
+      doMELA_Reweight = False
   elif any(x in OutputHypothesis for x in ["Cuu","Cdd","Css","Ccc"]):
     doMELA_Reweight = False
   else:
@@ -990,6 +988,7 @@ def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Anal
   if doMELA_Reweight:
     MelaConstantNames = GetConstantsAndMELA_From_Template_Name_JHUGen(OutputHypothesis,ProductionMode,isData,Analysis_Config)
     print("MELA:", MelaConstantNames, "Lumi: " , lumi)
+    print(tree2array(tree=InputTree,branches=[MelaConstantNames],top_branch_name=TopTreeName).astype(float))
     return eventweight * tree2array(tree=InputTree,branches=[MelaConstantNames],top_branch_name=TopTreeName).astype(float) * lumi
   
   if "zjets" in ProductionMode or "ZX" in ProductionMode or "data" in ProductionMode:

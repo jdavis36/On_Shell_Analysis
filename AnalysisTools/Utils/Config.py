@@ -279,16 +279,14 @@ class Analysis_Config:
       self.LHE_Study=True
       # Use Heshy Optimal Binning #
       self.UseOptimal = {"Untagged":True}
-      self.Optimal_Discriminants_Untagged = {"Name":"Analytic","nbins":20,"Observables_For_Optimal":["Z1Mass","Z2Mass","helcosthetaZ1","helcosthetaZ2","helphi"]} # This is a list of the most optimal discriminants
+      self.Optimal_Discriminants_Untagged = {"Name":"Analytic","nbins":20,"Observables_For_Optimal":["MZ1","MZ2","costheta1d","costheta2d","Phid"]} # This is a list of the most optimal discriminants
       # Discriminants and couplings for OnShell Analysis #
       self.Coupling_Name = '8AC_Decay_Only'
       #self.Hypothesis_List = {"Hypothesis":['g1','g2','g4','g1prime2','ghzgs1prime2',"g2gg","g4gg","g2Zg","g4Zg"],"Options":"SM+AC_Only HZZ_Only"}
       self.Hypothesis_List = {"Hypothesis":['g1','g4',"g2gg","g4gg","g2Zg","g4Zg"],"Options":"SM+AC_Only HZZ_Only"}
-      self.Discriminants_To_Calculate = ["D_0minus_decay","D_CP_decay","D_0hplus_decay","D_int_decay","D_L1_decay","D_L1int_decay","D_L1Zg_decay","D_L1Zgint_decay","D_L1L1Zg_decay","D_L1L1Zgint_decay","D_0minus_Zg_decay","D_CP_Zg_decay","D_0hplus_Zg_decay","D_int_Zg_decay","D_0minus_gg_decay","D_CP_gg_decay","D_0hplus_gg_decay",
-                                         "D_bkg",
-                                         "Pt4l"]
+      self.Discriminants_To_Calculate = ["D_0minus_decay","D_CP_decay","D_0hplus_decay","D_int_decay","D_L1_decay","D_L1int_decay","D_L1Zg_decay","D_L1Zgint_decay","D_L1L1Zg_decay","D_L1L1Zgint_decay","D_0minus_Zg_decay","D_CP_Zg_decay","D_0hplus_Zg_decay","D_int_Zg_decay","D_0minus_gg_decay","D_CP_gg_decay","D_0hplus_gg_decay"]
       self.lumi = {'2016':35.9,'2017':41.5,'2018':59.7}
-      self.Untagged_Discriminants={"D_bkg":[0,0.33,0.66,1],"Z1Mass":[0,60,85,120],"Z2Mass":[0,20,40,70],"helcosthetaZ1":[-1,-0.8,0.8,1],"helcosthetaZ2":[-1,-0.8,0.8,1],"helphi":[-3.14,-1.57,1.57,3.14]}
+      self.Untagged_Discriminants={"MZ1":[0,60,85,120],"MZ2":[0,20,40,70],"costheta1d":[-1,-0.8,0.8,1],"costheta2d":[-1,-0.8,0.8,1],"Phid":[-3.14,-1.57,1.57,3.14]}
       # This section should be a list of tags and signal types to use to make cards #
       #self.Production_Modes=["ggH","VBF","Wplus","Wminus","ZH","bbH","ttH"]
       self.Production_Modes=["ggH"]
