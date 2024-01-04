@@ -58,3 +58,12 @@ def update_xsec(name, xsec):
 
 
   return new_xsec
+
+def Fix_LHE_XSec(name):
+  print(name)
+  new_xsec = 0
+  
+  if name == ("Blah"): new_xsec = 1
+  else: new_xsec = 1
+
+  return new_xsec

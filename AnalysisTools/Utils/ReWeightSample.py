@@ -923,7 +923,7 @@ def Reweight_Branch_NoHff(InputTree,ProductionMode,OutputHypothesis,isData,Analy
 # This is what I use for the photon analysis #
 # ===========================================#
 
-def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Analysis_Config,lumi,year,DoMassFilter,TopTreeName):
+def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Analysis_Config,lumi,year,DoMassFilter,TopTreeName,DoLHEStudy=False):
   # Check the input for Input Hypothesis and Output Hypothesis #
   print ("InputTree:",InputTree)
   print ("Template:", template_name)
@@ -969,12 +969,21 @@ def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Anal
   eventweight = []
   if Analysis_Config.ReweightProcess == "Calc_Event_Weight_2021_gammaH":
     if 'WH' in InputTree:
-      eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"WH"+"_"+str(year),DoMassFilter,TopTreeName)
+      if DoLHEStudy:
+        eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"WH"+"_"+str(year),DoMassFilter,TopTreeName,DoLHEStudy=True)
+      else:
+        eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"WH"+"_"+str(year),DoMassFilter,TopTreeName)
     elif 'ZH' in InputTree:
-      eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"ZH"+"_"+str(year),DoMassFilter,TopTreeName)
+      if DoLHEStudy:
+        eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"ZH"+"_"+str(year),DoMassFilter,TopTreeName,DoLHEStudy=True)
+      else:
+        eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"ZH"+"_"+str(year),DoMassFilter,TopTreeName)
     else:
       print(ProductionMode,DoMassFilter)
-      eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,ProductionMode+"_"+str(year),DoMassFilter,TopTreeName)
+      if DoLHEStudy:
+        eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,ProductionMode+"_"+str(year),DoMassFilter,TopTreeName,DoLHEStudy=True)
+      else:
+        eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,ProductionMode+"_"+str(year),DoMassFilter,TopTreeName)
   else:
     raise ValueError('Choose Valid Reweighting procedure in Analysis.Config')
   # Get List of Hypothesis to Reweight By #

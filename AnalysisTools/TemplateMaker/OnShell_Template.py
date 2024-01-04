@@ -903,8 +903,12 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
       for tn in Template_Names: # Choose which hypothesis to reweight to
         Temporary_Histogram_List = [] # store the reweighted histogram for each sample in Samples to Reweight
         for sample in Samples_To_Reweight: # Loop over all samples with input production mode
+          New_Weights = []
           print("File:",sample)
-          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
+          if Analysis_Config.LHE_Study:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+          else:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
           for Discriminant in D_Name:
             Discriminant_Values[Discriminant] = tree2array(tree=sample,branches=[Discriminant],top_branch_name="eventTree").astype(float);
           # Fill the histogram with the Discriminants for each template #
@@ -961,6 +965,7 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
       for tn in Template_Names: # Choose which hypothesis to reweight to
         Temporary_Histogram_List = [] # store the reweighted histogram for each sample in Samples to Reweight
         for sample in Samples_To_Reweight: # Loop over all samples with input production mode
+          New_Weights = []
           print("File:",sample)
            # This name could change but overall processed CJLST trees for this analysis should have eventTree as the name
           if Combine_Production_Mode == "Sum" and ("bkg" not in tn): # If we need to sum over samples make sure we send the correct production mode to the weight calculator
@@ -968,9 +973,15 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
             temp_prod = Get_Prod_Mode_From_Sample_Name(sample)
             new_tn = temp_prod + "_" + tn.split("_")[1]
             print("new_tn: ",new_tn)
-            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
+            if Analysis_Config.LHE_Study:
+              New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+            else:
+              New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
           else:
-            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
+            if Analysis_Config.LHE_Study:
+              New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+            else:
+              New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
           for Discriminant in D_Name:
             Discriminant_Values[Discriminant] = tree2array(tree=sample,branches=[Discriminant],top_branch_name="eventTree").astype(float)
           # Fill the histogram with the Discriminants for each template #
@@ -1039,7 +1050,11 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
         for sample in Samples_To_Reweight: # Loop over all samples with input production mode
           # This name could change but overall processed CJLST trees for this analysis should have eventTree as the name
           print(sample)
-          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
+          New_Weights = []
+          if Analysis_Config.LHE_Study:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+          else:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
           for Discriminant in D_Name:
             Discriminant_Values[Discriminant] = tree2array(tree=sample,branches=[Discriminant],top_branch_name="eventTree").astype(float)
           # Fill the histogram with the Discriminants for each template #
@@ -1102,14 +1117,21 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
     for tn in Template_Names: # Choose which hypothesis to reweight to
       Temporary_Histogram_List = [] # store the reweighted histogram for each sample in Samples to Reweight
       for sample in Samples_To_Reweight: # Loop over all samples with input production mode
+        New_Weights = []
         if Combine_Production_Mode == "Sum" and ("bkg" not in tn): # If we need to sum over samples make sure we send the correct production mode to the weight calculator
           # Get the production mode from the sample
           temp_prod = Get_Prod_Mode_From_Sample_Name(sample)
           new_tn = temp_prod + "_" + tn.split("_")[1]
           print("new_tn: ",new_tn)
-          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
+          if Analysis_Config.LHE_Study:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+          else:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
         else:
-          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn.split("_CMS")[0],isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
+          if Analysis_Config.LHE_Study:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn.split("_CMS")[0],isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+          else:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn.split("_CMS")[0],isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
         D_Name_Temp = Discriminants.keys()
         New_D_bkg = "" # Depending on the systematic replace D_bkg with the correct syst version#
         if "res" in tn and "Up" in tn:
@@ -1179,7 +1201,11 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
     for tn in Template_Names: # Choose which hypothesis to reweight to
       Temporary_Histogram_List = [] # store the reweighted histogram for each sample in Samples to Reweight
       for sample in Samples_To_Reweight: # Loop over all samples with input production mode
-        New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
+        New_Weights = []
+        if Analysis_Config.LHE_Study:
+          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+        else:
+          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
         for Discriminant in D_Name:
           Discriminant_Values[Discriminant] = tree2array(tree=sample,branches=[Discriminant],top_branch_name="eventTree").astype(float);
         # Fill the histogram with the Discriminants for each template #
@@ -1252,9 +1278,15 @@ def FillHistOnShell(targetprod,targetcateg,hlist,yeardict,Analysis_Config,year,f
           temp_prod = Get_Prod_Mode_From_Sample_Name(sample)
           new_tn = temp_prod + "_" + tn.split("_")[1]
           print("new_tn: ",new_tn)
-          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
+          if Analysis_Config.LHE_Study:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True)
+          else:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,new_tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree")
         else:
-          New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
+          if Analysis_Config.LHE_Study:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree",DoLHEStudy=True) 
+          else:
+            New_Weights = Reweight_Branch_NoHff_From_Template_Name(sample,tn,isData,Analysis_Config,lumi,year,DoMassFilter,"eventTree") # Returns New Weights for each event
         for Discriminant in D_Name:
           Discriminant_Values[Discriminant] = tree2array(tree=sample,branches=[Discriminant],top_branch_name="eventTree").astype(float)
         # Fill the histogram with the Discriminants for each template #
