@@ -263,8 +263,8 @@ class Analysis_Config:
 
     if name == "Test_Optimal_Binning_All_Untagged": # HVV Couplings and Photons
       self.name = "Test_Optimal_Binning_All_Untagged"
-      self.CMSSW_PATH = "/afs/cern.ch/work/j/jejeffre/public/HEP_Ex_Tools/HexUtils/New_Git/HexUtils/CMSSW_13_3_0/src"
-      self.Work_Dir = "/afs/cern.ch/work/j/jejeffre/public/HEP_Ex_Tools/HexUtils/New_Git/HexUtils"
+      self.CMSSW_PATH = "/afs/cern.ch/work/j/jejeffre/public/HEP_Ex_Tools/HexUtils/New_Git/HexUtils/CMSSW_13_3_1/src"
+      self.Work_Dir = "/afs/cern.ch/work/j/jejeffre/public/HEP_Ex_Tools/HexUtils/New_Git/On_Shell_Analysis"
       self.useVHMETTagged = False
       self.useQGTagging = False
       self.DoMassFilter = True
@@ -276,8 +276,9 @@ class Analysis_Config:
       self.Variable_Edges = False
       self.Do_Shape_Systematics = False
       self.Combine_Production_Mode = "Average"
+      self.LHE_Study=True
       # Use Heshy Optimal Binning #
-      self.UseOptimal = {"Untagged":False}
+      self.UseOptimal = {"Untagged":True}
       self.Optimal_Discriminants_Untagged = {"Name":"Analytic","nbins":20,"Observables_For_Optimal":["Z1Mass","Z2Mass","helcosthetaZ1","helcosthetaZ2","helphi"]} # This is a list of the most optimal discriminants
       # Discriminants and couplings for OnShell Analysis #
       self.Coupling_Name = '8AC_Decay_Only'
@@ -287,8 +288,7 @@ class Analysis_Config:
                                          "D_bkg",
                                          "Pt4l"]
       self.lumi = {'2016':35.9,'2017':41.5,'2018':59.7}
-      #self.Untagged_Discriminants={"Z1Mass":[0,60,85,120],"Z2Mass":[0,20,40,70],"helcosthetaZ1":[-1,-0.8,0.8,1],"helcosthetaZ2":[-1,-0.8,0.8,1],"helphi":[-3.14,-1.57,1.57,3.14]}
-      self.Untagged_Discriminants={"D_bkg":[0,0.33,0.66,1],"Z1Mass":[0,60,85,120],"Z2Mass":[0,20,40,70]}
+      self.Untagged_Discriminants={"D_bkg":[0,0.33,0.66,1],"Z1Mass":[0,60,85,120],"Z2Mass":[0,20,40,70],"helcosthetaZ1":[-1,-0.8,0.8,1],"helcosthetaZ2":[-1,-0.8,0.8,1],"helphi":[-3.14,-1.57,1.57,3.14]}
       # This section should be a list of tags and signal types to use to make cards #
       #self.Production_Modes=["ggH","VBF","Wplus","Wminus","ZH","bbH","ttH"]
       self.Production_Modes=["ggH"]
