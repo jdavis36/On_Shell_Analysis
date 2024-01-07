@@ -1,4 +1,4 @@
-from .Analytic import*
+from .Analytic_Observables import*
 import os
 import sys
 #Dynamically import the Analysis Config#
