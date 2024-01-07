@@ -15,4 +15,3 @@ def Get_Bin_Number(Optimal_Discriminant_Dictionary,Obserables_List):
         return bin_map_for_testing(Optimal_Discriminant_Dictionary["nbins"],Obserables_List)[1]
     else:
         return 
-
