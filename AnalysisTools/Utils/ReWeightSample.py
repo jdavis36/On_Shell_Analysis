@@ -951,15 +951,13 @@ def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Anal
   # ================== #
   doMELA_Reweight = None
   #if OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis) or OutputHypothesis == "data_obs" :
-  if OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis and "gammaH" in ProductionMode):
+  if not Analysis_Config.Reweight_SM and "0PM" in OutputHypothesis:
+    doMELA_Reweight = False
+  elif OutputHypothesis == "bkg" or ("0PM" in OutputHypothesis and "gammaH" in ProductionMode):
       doMELA_Reweight = False
   elif any(x in OutputHypothesis for x in ["Cuu","Cdd","Css","Ccc"]):
     doMELA_Reweight = False
   else:
-    #if any(prod in ProductionMode for prod in ['VBF','VH','ZH','WplusH','WminusH','bbH','gammaH']):
-    #  Check_Input(ProductionMode,OutputHypothesis,None)
-    #else:
-    #  Check_Input(ProductionMode,OutputHypothesis,"Hff0+")
     doMELA_Reweight = True
   if doMELA_Reweight is None:
     raise ValueError('Choose MELA reweight option in reweight failed!')
@@ -977,7 +975,6 @@ def Reweight_Branch_NoHff_From_Template_Name(InputTree,template_name,isData,Anal
       else:
         eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,"ZH"+"_"+str(year),DoMassFilter,TopTreeName)
     else:
-      print(ProductionMode,DoMassFilter)
       if DoLHEStudy:
         eventweight = Calc_Tree_Weight_2021_gammaH(InputTree,ProductionMode+"_"+str(year),DoMassFilter,TopTreeName,DoLHEStudy=True)
       else:
