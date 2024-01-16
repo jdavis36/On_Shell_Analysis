@@ -47,7 +47,7 @@ def TagUntagged_Plus_GammaH():
     return Names
 
 def TagUntagged_Plus_qqGammaH():
-    Names = ["PhotonPt","PhotonIsCutBasedTightID"]
+    Names = ["PhotonPt","PhotonIsCutBasedLooseID","PhotonIsCutBasedTightID"]
     return Names
 
 def Return_Needed_From_Discriminants_To_Calculate(Analysis_Config):
