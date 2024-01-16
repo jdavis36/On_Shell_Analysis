@@ -150,24 +150,28 @@ def main(argv):
               if Analysis_Config.LHE_Study:
                 t=f["eventTree"]
               else:
-                if not isData and "AllData" in tagtreefilename:
+                if retag:
+                  t = f["eventTree"]
+                elif not isData and "AllData" in tagtreefilename:
                   #print("here")
                   t = f["CRZLLTree"][tree]
                 else:
-                  t = f["ZZTree"][tree]
-                if retag:
-                  t = f["eventTree"]
+                  if not retag:
+                    t = f["ZZTree"][tree]
+                
 
               if Analysis_Config.LHE_Study:
                 tc=fc.Get("eventTree")
               else:
-                if not isData and "AllData" in tagtreefilename:
+                if retag:
+                  tc = fc.Get("eventTree")
+                elif not isData and "AllData" in tagtreefilename:
                   print("here")
                   tc = fc.Get("CRZLLTree/"+tree)
                 else:
-                  tc = fc.Get("ZZTree/"+tree)
-                if retag:
-                  tc = fc.Get("eventTree")
+                  if not retag:
+                    tc = fc.Get("ZZTree/"+tree)
+                
 
               treebranches = [ x for x in t.keys() ]
 
@@ -195,8 +199,9 @@ def main(argv):
               branchdict["Bin40"] = []
               
               # Load the Disriminants to be saved as branches #
-              for name in Analysis_Config.Discriminants_To_Calculate:
-                branchdict[name] = []
+              if not retag:
+                for name in Analysis_Config.Discriminants_To_Calculate:
+                  branchdict[name] = []
               #for ent in trange(t.GetEntries()):
             
               Needed_Branches = []
@@ -211,13 +216,17 @@ def main(argv):
                 for name in TagUntagged_Plus_qqGammaH():
                   Needed_Branches.append(name)
               #Load variables depending on discriminants
-              for name in Return_Needed_From_Discriminants_To_Calculate(Analysis_Config):
-                Needed_Branches.append(name)
-              for name in Needed_For_All():
-                Needed_Branches.append(name)
-              if not Analysis_Config.LHE_Study:
-                for name in Get_Scale_Values():
+              if not retag:
+                for name in Return_Needed_From_Discriminants_To_Calculate(Analysis_Config):
                   Needed_Branches.append(name)
+                for name in Needed_For_All():
+                  Needed_Branches.append(name)
+                if not Analysis_Config.LHE_Study:
+                  for name in Get_Scale_Values():
+                    Needed_Branches.append(name)
+                
+              if retag:
+                Needed_Branches.append("Bin40")
               
               if Analysis_Config.LHE_Study:
                 for i in range(len(Needed_Branches)):
@@ -227,6 +236,7 @@ def main(argv):
               #value_dict = t.arrays(Needed_Branches,library="np")
               Total_Events = t.num_entries
               Total_Run_Over = 0
+
               for value_dict in t.iterate(Needed_Branches,step_size=10000,library="np"):
                 print("Processing",Total_Run_Over,"/",Total_Events," Precentage complete:",float(Total_Run_Over)/float(Total_Events) * 100)
                 Total_Run_Over += 10000
@@ -248,7 +258,7 @@ def main(argv):
                   
                   #================ Fill failed events with dummy and skip to loop over branches ================
                   if retag:
-                    branchdict["Bin40"].append(t.Bin40)
+                    branchdict["Bin40"].append(value_dict["Bin40"][ent])
                   elif Analysis_Config.LHE_Study:
                     branchdict["Bin40"].append(0)
                   else:
@@ -331,7 +341,6 @@ def main(argv):
                     branchdict["EventTag"].append(tag)                   
                   if retag:
                     Do_Retag = True
-                    break
                   else: # Calculate Discriminants   
                     #============= Save pt_4l discriminants ==============
                     if "Pt4l" in Analysis_Config.Discriminants_To_Calculate:
