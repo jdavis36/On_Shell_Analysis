@@ -61,9 +61,37 @@ def update_xsec(name, xsec):
 
 def Fix_LHE_XSec(name):
   print(name)
+  fb_to_pb = 0.001 
   new_xsec = 0
   
-  if name == ("Blah"): new_xsec = 1
-  else: new_xsec = 1
-
+  if "ggH" in name:
+    if "EFT" in name:
+      if "0PHZg" in name and "f05": new_xsec = 519.6 * fb_to_pb
+      elif "0PHZg" in name: new_xsec = 126200	* fb_to_pb
+      elif "0PHyy" in name and "f05": new_xsec = 510.0	* fb_to_pb
+      elif "0PHyy" in name: new_xsec = 87700	* fb_to_pb
+      elif "0PH" in name and "f05": new_xsec = 543.8	* fb_to_pb
+      elif "0PH" in name: new_xsec = 1629	* fb_to_pb
+      else: raise ValueError("Not a valid hypothesis name for ggH EFT root file")
+    else:
+      if "0PM" in name: new_xsec = 247.0 * fb_to_pb
+      elif "0MZy" in name and "f05" in name: new_xsec = 494.7 * fb_to_pb
+      elif "0MZy" in name: new_xsec = 86300.0 * fb_to_pb
+      elif "0Myy" in name and "f05" in name : new_xsec = 495.1 * fb_to_pb	  
+      elif "0Myy" in name: new_xsec = 82600.0 * fb_to_pb
+      elif "0PHZy" in name and "f05" in name: new_xsec = 514.5 * fb_to_pb
+      elif "0PHZy" in name: new_xsec = 106100.0 * fb_to_pb
+      elif "0PHyy" in name and "f05" in name : new_xsec = 502.6 * fb_to_pb
+      elif "0PHyy" in name: new_xsec = 86100 * fb_to_pb
+      elif "0PH" in name and "f05" in name: new_xsec = 921.8 * fb_to_pb
+      elif "0PH" in name: new_xsec = 84.13 * fb_to_pb
+      elif "0M" in name and "f05" in name : new_xsec = 494.0 * fb_to_pb
+      elif "0M" in name: new_xsec = 34.48 * fb_to_pb
+      elif "0L1Zy" in name and "f05" in name : new_xsec = 1 * fb_to_pb
+      elif "0L1Zy" in name: new_xsec = 1 * fb_to_pb
+      elif "0L1" in name and "f05" in name : new_xsec = 1 * fb_to_pb
+      elif "0L1" in name: new_xsec = 1 * fb_to_pb
+      else: raise ValueError("Not a valid hypothesis name for ggH root file")
+  else:
+    new_xsec = 1
   return new_xsec
