@@ -357,39 +357,39 @@ def main(argv):
                     if "D_0minus_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0minus_decay"].append(Discriminants.D_0minus_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_CP_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_CP_decay"].append(Discriminants.D_CP_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghz4_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_CP_decay"].append(Discriminants.D_CP_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghz4_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_0hplus_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0hplus_decay"].append(Discriminants.D_0hplus_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_int_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_int_decay"].append(Discriminants.D_int_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghz2_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_int_decay"].append(Discriminants.D_int_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghz2_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_L1_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_L1_decay"].append(Discriminants.D_L1_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_L1int_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_L1int_decay"].append(Discriminants.D_L1int_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_L1int_decay"].append(Discriminants.D_L1int_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_L1Zg_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_L1Zg_decay"].append(Discriminants.D_L1Zg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_L1Zgint_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_L1Zgint_decay"].append(Discriminants.D_L1Zgint_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_L1Zgint_decay"].append(Discriminants.D_L1Zgint_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_L1L1Zg_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_L1L1Zg_decay"].append(Discriminants.D_L1L1Zg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_L1L1Zgint_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_L1L1Zgint_decay"].append(Discriminants.D_L1L1Zgint_decay(value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_ghza1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_L1L1Zgint_decay"].append(Discriminants.D_L1L1Zgint_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_ghza1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1prime2_1E4_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza1prime2_1E4_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_0minus_Zg_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0minus_Zg_decay"].append(Discriminants.D_0minus_Zg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_CP_Zg_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_CP_Zg_decay"].append(Discriminants.D_CP_Zg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghza4_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_CP_Zg_decay"].append(Discriminants.D_CP_Zg_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghza4_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_0hplus_Zg_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0hplus_Zg_decay"].append(Discriminants.D_0hplus_Zg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_int_Zg_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_int_Zg_decay"].append(Discriminants.D_int_Zg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghza2_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_int_Zg_decay"].append(Discriminants.D_int_Zg_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_ghza2_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghza2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_0minus_gg_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0minus_gg_decay"].append(Discriminants.D_0minus_gg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_gha4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_CP_gg_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_CP_gg_decay"].append(Discriminants.D_CP_gg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_gha4_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_gha4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_CP_gg_decay"].append(Discriminants.D_CP_gg_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_gha4_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_gha4_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_0hplus_gg_decay" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0hplus_gg_decay"].append(Discriminants.D_0hplus_gg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_gha2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     if "D_int_gg_decay" in Analysis_Config.Discriminants_To_Calculate:
-                      branchdict["D_int_gg_decay"].append(Discriminants.D_int_gg_decay(value_dict["p_GG_SIG_ghg2_1_ghz1_1_gha2_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_gha2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
+                      branchdict["D_int_gg_decay"].append(Discriminants.D_int_gg_decay_sub(value_dict["p_GG_SIG_ghg2_1_ghz1_1_gha2_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_ghz1_1_JHUGen"][ent],value_dict["p_GG_SIG_ghg2_1_gha2_1_JHUGen"][ent],value_dict["ZZMass"][ent],gConstants_list))
                     #=============== Calculating VBF Discriminants ================
                     if "D_0minus_VBF" in Analysis_Config.Discriminants_To_Calculate:
                       branchdict["D_0minus_VBF"].append(Discriminants.D_0minus_VBF(value_dict["p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal"][ent],value_dict["p_JJVBF_SIG_ghv4_1_JHUGen_JECNominal,notdijet"][ent],value_dict["ZZMass"][ent],gConstants_list))
@@ -568,10 +568,12 @@ def main(argv):
 
               all_keys_for_new_branches = {}
               
-
+              Total_Merged = 0
               with uproot.recreate(ftempfilename_all_branches) as combined_tree:
                 first = True
                 for batch1, batch2 in zip(saved_old_tree.iterate(step_size=10000, library="np"),saved_new_tree.iterate(step_size=10000, library="np")):
+                  print("Processing",Total_Merged,"/",Total_Events," Precentage complete:",float(Total_Merged)/float(Total_Events) * 100)
+                  Total_Merged += 10000
                   merged_dictionary = batch1 | batch2
                   if first:
                     combined_tree["eventTree"] = merged_dictionary
